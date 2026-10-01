@@ -1,5 +1,5 @@
 // FastAPI backend
-const API_URL = "https://mansik-saltulan-score-2.onrender.com";
+const API_URL = "https://mansik-saltulan-score-1.onrender.com";
 
 const form = document.getElementById("predict-form");
 const btn = document.getElementById("submit-btn");
