@@ -60,8 +60,6 @@ function showScore(raw) {
   show("ok");
 
   fill.style.stroke = info.color;
-
-  // Reset animation
   fill.style.strokeDashoffset = 100;
 
   requestAnimationFrame(() => {
@@ -98,7 +96,6 @@ form.addEventListener("submit", async (e) => {
   const numbers = [
     "Age",
     "Avg_Daily_Usage_Hours",
-    "DailyUnlocks",
     "Daily_Unlocks",
     "Study_Hours",
     "Physical_Activity_Hours",
@@ -113,14 +110,17 @@ form.addEventListener("submit", async (e) => {
       : value.trim();
   }
 
-  console.log("Sending payload:", payload);
+  console.log("=================================");
+  console.log("SENDING DATA:");
+  console.log(payload);
+  console.log("=================================");
 
   btn.disabled = true;
   show("loading");
 
   try {
 
-    // IMPORTANT: /predict is the FastAPI POST endpoint
+    // Send request to FastAPI /predict
     const res = await fetch(`${API_URL}/predict`, {
       method: "POST",
       headers: {
@@ -129,39 +129,71 @@ form.addEventListener("submit", async (e) => {
       body: JSON.stringify(payload)
     });
 
-    console.log("Response status:", res.status);
+    console.log("HTTP STATUS:", res.status);
+    console.log("HTTP OK:", res.ok);
 
-    // Read response as text first
-    // This prevents "Unexpected end of JSON input"
+    // Read server response
     const text = await res.text();
 
-    console.log("Raw server response:", text);
+    console.log("=================================");
+    console.log("RAW SERVER RESPONSE:");
+    console.log(text);
+    console.log("=================================");
 
     let data = {};
 
-    if (text) {
+    // Convert response to JSON
+    if (text.trim() !== "") {
       try {
         data = JSON.parse(text);
       } catch (jsonError) {
+        console.error("JSON PARSE ERROR:", jsonError);
+
         throw new Error(
-          `Server returned invalid JSON: ${text}`
+          "Server returned invalid JSON: " + text
         );
       }
     }
 
+    console.log("PARSED SERVER DATA:");
+    console.log(data);
+
+    // Backend returned an error
     if (!res.ok) {
+      console.error("SERVER ERROR DATA:", data);
       throw new Error(readError(data));
     }
 
+    // Check prediction field
     if (data.predicted_mental_health === undefined) {
-      throw new Error("Server did not return a mental health score.");
+
+      console.error(
+        "PREDICTION FIELD NOT FOUND."
+      );
+
+      console.error(
+        "FULL SERVER DATA:",
+        data
+      );
+
+      throw new Error(
+        "Server did not return a mental health score."
+      );
     }
 
+    console.log(
+      "PREDICTED MENTAL HEALTH:",
+      data.predicted_mental_health
+    );
+
+    // Show prediction
     showScore(data.predicted_mental_health);
 
   } catch (err) {
 
-    console.error("Prediction error:", err);
+    console.error("=================================");
+    console.error("PREDICTION ERROR:", err);
+    console.error("=================================");
 
     const offline = err instanceof TypeError;
 
