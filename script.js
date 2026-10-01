@@ -1,5 +1,5 @@
 // Change this if your FastAPI server runs somewhere else
-const API_URL = "http://127.0.0.1:8000/predict";
+const API_URL = "https://mansik-saltulan-score-1.onrender.com";
 
 const form = document.getElementById("predict-form");
 const btn = document.getElementById("submit-btn");
