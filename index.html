@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Mental Health Predictor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="intro">
+    <h1>How is screen time affecting your well-being?</h1>
+    <p>Answer a few questions about your habits and get an estimated mental health score from our model.</p>
+  </header>
+
+  <main class="layout">
+    <form id="predict-form" novalidate>
+
+      <fieldset>
+        <legend>About you</legend>
+        <div class="grid">
+          <label>Age
+            <input type="number" name="Age" min="10" max="100" value="20" required>
+          </label>
+          <label>Gender
+            <select name="Gender" required>
+              <option>Male</option>
+              <option>Female</option>
+            </select>
+          </label>
+          <label>Country
+            <input type="text" name="Country" list="countries" placeholder="e.g. India" required>
+            <datalist id="countries">
+              <option>Canada</option><option>USA</option><option>India</option>
+              <option>Australia</option><option>UK</option><option>Germany</option>
+              <option>France</option><option>Mexico</option><option>Turkey</option>
+            </datalist>
+          </label>
+          <label>Academic level
+            <select name="Academic_Level" required>
+              <option>High School</option>
+              <option selected>Undergraduate</option>
+              <option>Graduate</option>
+            </select>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Social media use</legend>
+        <div class="grid">
+          <label>Most used platform
+            <select name="most_used_platform" required>
+              <option>Instagram</option><option>Facebook</option><option>TikTok</option>
+              <option>YouTube</option><option>Snapchat</option><option>Twitter</option>
+              <option>LinkedIn</option><option>WhatsApp</option><option>WeChat</option>
+              <option>LINE</option><option>KakaoTalk</option><option>VKontakte</option>
+            </select>
+          </label>
+          <label>Main purpose
+            <select name="Purpose_Of_Use" required>
+              <option>Entertainment</option>
+              <option>Networking</option>
+              <option>Education</option>
+              <option>News</option>
+            </select>
+          </label>
+          <label>Daily use (hours)
+            <input type="number" name="Avg_Daily_Usage_Hours" min="2" max="24" step="0.1" value="4" required>
+            <small>Between 2 and 24</small>
+          </label>
+          <label>Phone unlocks per day
+            <input type="number" name="Daily_Unlocks" min="0" step="1" value="60" required>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Daily life</legend>
+        <div class="grid">
+          <label>Study hours per day
+            <input type="number" name="Study_Hours" min="0" step="0.1" value="3" required>
+          </label>
+          <label>Physical activity (hours)
+            <input type="number" name="Physical_Activity_Hours" min="0" max="10" step="0.1" value="1" required>
+            <small>Between 0 and 10</small>
+          </label>
+          <label>Sleep per night (hours)
+            <input type="number" name="Sleep_Hours_Per_Night" min="0" max="15" step="0.1" value="7" required>
+            <small>Between 0 and 15</small>
+          </label>
+          <label>Stress level
+            <select name="Stress_Level" required>
+              <option>Low</option>
+              <option selected>Medium</option>
+              <option>High</option>
+              <option>Very High</option>
+            </select>
+          </label>
+        </div>
+      </fieldset>
+
+      <button type="submit" id="submit-btn">Get my score</button>
+    </form>
+
+    <aside class="result" aria-live="polite">
+      <div id="result-empty">
+        <p>Your score will appear here after you submit the form.</p>
+      </div>
+
+      <div id="result-loading" hidden>
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Calculating…</p>
+      </div>
+
+      <div id="result-error" hidden>
+        <p class="error-title">Couldn't get a score</p>
+        <p id="error-text"></p>
+      </div>
+
+      <div id="result-ok" hidden>
+        <svg class="gauge" viewBox="0 0 200 115" role="img" aria-label="Score gauge">
+          <path class="gauge-track" d="M 20 100 A 80 80 0 0 1 180 100" pathLength="100"/>
+          <path id="gauge-fill" class="gauge-fill" d="M 20 100 A 80 80 0 0 1 180 100" pathLength="100"/>
+        </svg>
+        <p class="score"><span id="score-value">0</span><span class="out-of">/ 10</span></p>
+        <p id="score-label" class="score-label"></p>
+        <p id="score-advice" class="score-advice"></p>
+      </div>
+
+      <p class="disclaimer">This is a statistical estimate, not a medical diagnosis. If you're struggling, please talk to a doctor or counsellor.</p>
+    </aside>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
